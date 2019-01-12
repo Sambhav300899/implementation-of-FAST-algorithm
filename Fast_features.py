@@ -1,11 +1,13 @@
 import cv2
 import numpy
 import argparse as ap
+import time
 
 if __name__ == "__main__":
     ap = ap.ArgumentParser()
     ap.add_argument('-i', '--image', help = 'path to image', required = True)
     args = vars(ap.parse_args())
+    start = time.time()
 
     thresh_percentage = 20
 
@@ -33,9 +35,9 @@ if __name__ == "__main__":
                     nums_matched_darker = 0
 
                     for pix in test_pix:
-                        print (gray[j][i],((gray[j][i])*thresh_percentage = 20)/100,pix)
+                        print (gray[j][i],((gray[j][i])*thresh_percentage)/100,pix)
 
-                        if gray[j][i] + ((gray[j][i])*thresh_percentage = 20)/100 > pix :
+                        if gray[j][i] + ((gray[j][i])*thresh_percentage)/100 > pix :
                             nums_matched_darker = nums_matched_darker + 1
 
                         elif gray[j][i] - ((gray[j][i])*thresh_percentage)/100 < pix :
@@ -54,10 +56,10 @@ if __name__ == "__main__":
             else:
                 pass
 
-    print (kps)
-
     for kp in kps:
         cv2.circle(gray, kp, 1, 0, -1)
 
+    stop = time.time()
+    print ("time taken to find {} features = ".format(len(kps)), stop - start, "secs")
     cv2.imshow('image', gray)
     cv2.waitKey(0)
