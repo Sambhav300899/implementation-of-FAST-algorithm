@@ -7,11 +7,10 @@ if __name__ == "__main__":
     ap.add_argument('-i', '--image', help = 'path to image', required = True)
     args = vars(ap.parse_args())
 
+    thresh_percentage = 20
+
     img = cv2.imread(args['image'])
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    #dx = cv2.Sobel(img, cv2.CV_64F, 1, 0, 1)
-    #dy = cv2.Sobel(img, cv2.CV_64F, 0, 1, 1)
-    #mag, angle = cv2.cartToPolar(dx, dy)
     test = 0
     kps = []
 
@@ -34,14 +33,17 @@ if __name__ == "__main__":
                     nums_matched_darker = 0
 
                     for pix in test_pix:
-                        print (gray[j][i],((gray[j][i])*20)/100,pix)
+                        print (gray[j][i],((gray[j][i])*thresh_percentage = 20)/100,pix)
 
-                        if gray[j][i] + ((gray[j][i])*20)/100 > pix :
+                        if gray[j][i] + ((gray[j][i])*thresh_percentage = 20)/100 > pix :
                             nums_matched_darker = nums_matched_darker + 1
-                        elif gray[j][i] - ((gray[j][i])*20)/100 < pix :
+
+                        elif gray[j][i] - ((gray[j][i])*thresh_percentage)/100 < pix :
                             nums_matched_brighter = nums_matched_brighter + 1
+
                         else :
                             pass
+
                         print ("*************")
 
                     if nums_matched_darker == 3 or nums_matched_brighter == 3 :
@@ -53,6 +55,7 @@ if __name__ == "__main__":
                 pass
 
     print (kps)
+
     for kp in kps:
         cv2.circle(gray, kp, 1, 0, -1)
 
