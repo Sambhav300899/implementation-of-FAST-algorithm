@@ -1,5 +1,5 @@
 import cv2
-import numpy
+import numpy as np
 import argparse as ap
 import time
 
@@ -10,7 +10,7 @@ if __name__ == "__main__":
     start = time.time()
 
     thresh_percentage = 20
-
+    n = 12
     img = cv2.imread(args['image'])
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     test = 0
@@ -26,10 +26,10 @@ if __name__ == "__main__":
                     test = test + 1
                     test_pix = []
 
-                    test_pix.append(gray[j-3][i])
-                    test_pix.append(gray[j][i+3])
-                    test_pix.append(gray[j+3][i])
-                    test_pix.append(gray[j][i-3])
+                    test_pix.append(gray[j-3][i]) #1
+                    test_pix.append(gray[j][i+3]) #5
+                    test_pix.append(gray[j+3][i]) #9
+                    test_pix.append(gray[j][i-3]) #13
 
                     nums_matched_brighter = 0
                     nums_matched_darker = 0
@@ -49,7 +49,41 @@ if __name__ == "__main__":
                         print ("*************")
 
                     if nums_matched_darker == 3 or nums_matched_brighter == 3 :
-                        kps.append((i,j))
+                        test_pix.insert(1,gray[j-3][i+1]) #2
+                        test_pix.insert(2,gray[j-2][i+2]) #3
+                        test_pix.insert(3,gray[j-1][i+3]) #4
+
+                        test_pix.insert(5,gray[j+1][i+3]) #6
+                        test_pix.insert(6,gray[j+2][i+2]) #7
+                        test_pix.insert(7,gray[j+3][i+1]) #8
+
+                        test_pix.insert(9,gray[j+3][i-3]) #10
+                        test_pix.insert(10,gray[j+2][i+2]) #11
+                        test_pix.insert(11,gray[j+1][i-3]) #12
+
+                        test_pix.insert(13,gray[j-1][i-3]) #14
+                        test_pix.insert(14,gray[j-2][i-2]) #15
+                        test_pix.insert(15,gray[j-3][i-1]) #16
+
+                        pixel_intensities = []
+
+                        for pix in test_pix:
+                            if gray[j][i] + ((gray[j][i])*thresh_percentage)/100 > pix :
+                                pixel_intensities.append(0)
+
+                            elif gray[j][i] - ((gray[j][i])*thresh_percentage)/100 < pix :
+                                pixel_intensities.append(1)
+
+                            else:
+                                pixel_intensities.append(-1)
+
+                        print (pixel_intensities)
+
+                        if pixel_intensities.count(1) == 12 or pixel_intensities.count(0) == 12:
+                            kps.append((i,j))
+                        else:
+                            pass
+
                     print("++++++++++++++++++++++++")
                 else:
                     pass
